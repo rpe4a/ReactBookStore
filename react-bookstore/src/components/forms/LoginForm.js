@@ -1,6 +1,6 @@
 /* eslint-disable react/forbid-prop-types */
 import React, { Component } from "react";
-import { Form, Button } from "semantic-ui-react";
+import { Form, Button, Message } from "semantic-ui-react";
 import PropTypes from "prop-types";
 import { isEmail, isEmpty } from "validator";
 import InlineError from "../commons/InlineError";
@@ -29,7 +29,14 @@ class LoginForm extends Component {
     this.setState({ errors });
 
     if (Object.keys(errors).length === 0) {
-      this.props.submit(this.state.data);
+      this.setState({ loading: true });
+
+      this.props.submit(this.state.data).catch(({ response }) =>
+        this.setState(state => ({
+          errors: { ...state.errors, ...response.data.errors },
+          loading: false
+        }))
+      );
     }
   };
 
@@ -46,7 +53,7 @@ class LoginForm extends Component {
     const { data, loading, errors } = this.state;
 
     return (
-      <Form onSubmit={this.onSubmit}>
+      <Form error={errors.global} loading={loading} onSubmit={this.onSubmit}>
         <Form.Field>
           <Form.Input
             name="email"
@@ -55,7 +62,8 @@ class LoginForm extends Component {
             placeholder="Email"
             onChange={this.onChange}
             value={data.email}
-            error={!!errors.email}
+            error={errors.email}
+            required
           />
           <InlineError text={errors.email} />
         </Form.Field>
@@ -67,11 +75,15 @@ class LoginForm extends Component {
             placeholder="Enter your password"
             onChange={this.onChange}
             value={data.password}
-            error={!!errors.password}
+            error={errors.password}
+            required
           />
           <InlineError text={errors.password} />
         </Form.Field>
-        <Button primary loading={loading}>
+        {errors.global && (
+          <Message error header="Form errors" content={errors.global} />
+        )}
+        <Button primary>
           Login
         </Button>
         <Button basic onClick={() => this.props.history.push("/")}>
