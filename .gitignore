@@ -3,6 +3,7 @@
 # dependencies
 react-bookstore/node_modules
 api-bookstore/node_modules
+api-bookstore/settings.json
 /node_modules
 /.pnp
 .pnp.js
