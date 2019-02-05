@@ -1,5 +1,5 @@
 import express from "express";
-import fs from "fs";
+import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import bodyParser from "body-parser";
@@ -7,17 +7,15 @@ import mongoose from "mongoose";
 import auth from "./routes/auth";
 
 //* Application settings
-const settings = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "../settings.json"), "utf8")
-);
+dotenv.config();
 
 //* Connect to MongoDB
-mongoose.connect(settings.ConnectionString);
+mongoose.connect(process.env.CONNECTION_STRING);
 
 const app = express();
 
 //* Setup server
-app.use(bodyParser.json());
+app.use(bodyParser.json()); //* for parse request.body to json
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -25,6 +23,7 @@ app.use(
   })
 );
 
+//* Setup Routing
 app.use("/api/auth", auth);
 
 app.get("/*", (_, res) => {
