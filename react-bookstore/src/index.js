@@ -9,13 +9,19 @@ import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import rootReducer from "./rootReducer";
 import * as serviceWorker from "./serviceWorker";
-
 import App from "./App";
+import { userLoggedIn } from "./actions/auth";
+
 
 const store = createStore(
   rootReducer,
   composeWithDevTools(applyMiddleware(thunk))
 );
+
+if (localStorage.getItem("token")) {
+  const user = { token: localStorage.getItem("token") };
+  store.dispatch(userLoggedIn(user));
+}
 
 ReactDOM.render(
   <BrowserRouter>
