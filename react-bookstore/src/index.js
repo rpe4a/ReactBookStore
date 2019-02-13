@@ -2,7 +2,7 @@ import "semantic-ui-css/semantic.min.css";
 
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 import { createStore, applyMiddleware } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { Provider } from "react-redux";
@@ -11,7 +11,6 @@ import rootReducer from "./rootReducer";
 import * as serviceWorker from "./serviceWorker";
 import App from "./App";
 import { userLoggedIn } from "./actions/auth";
-
 
 const store = createStore(
   rootReducer,
@@ -26,7 +25,8 @@ if (localStorage.getItem("token")) {
 ReactDOM.render(
   <BrowserRouter>
     <Provider store={store}>
-      <App />
+      {/* This fix react-router and redux */}
+      <Route component={App} />  
     </Provider>
   </BrowserRouter>,
   document.getElementById("root")

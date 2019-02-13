@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { Button } from 'semantic-ui-react'
 import { bindActionCreators } from "redux";
 import { Link } from "react-router-dom";
 import { logout } from "../../actions/auth";
@@ -16,7 +17,7 @@ class HomePage extends Component {
       <div>
         <h1>Home Page</h1>
         {this.props.isAuthenticated ? (
-          <button onClick={() => this.props.logout()}>Logout</button>
+          <Button primary onClick={() => this.props.logout()}>Logout</Button>
         ) : (
           <Link to="/login">Login</Link>
         )}
