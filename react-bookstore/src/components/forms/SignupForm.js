@@ -1,11 +1,10 @@
-/* eslint-disable react/forbid-prop-types */
 import React, { Component } from "react";
-import { Form, Button, Message } from "semantic-ui-react";
 import PropTypes from "prop-types";
+import { Form, Button } from "semantic-ui-react";
 import { isEmail, isEmpty } from "validator";
 import InlineError from "../commons/InlineError";
 
-class LoginForm extends Component {
+class SignupForm extends Component {
   constructor(props) {
     super(props);
 
@@ -24,23 +23,29 @@ class LoginForm extends Component {
       data: { ...this.state.data, [e.target.name]: e.target.value }
     });
 
-  onSubmit = () => {
+  onSubmit = e => {
+    e.preventDefault();
+
     const errors = this.validate(this.state.data);
     this.setState({ errors });
 
     if (Object.keys(errors).length === 0) {
       this.setState({ loading: true });
 
-      this.props.submit(this.state.data).catch(({ response }) =>
+      this.props.submit(this.state.data).catch(({ response }) => {
         this.setState(state => ({
-          errors: { ...state.errors, ...response.data.errors },
+          errors: {
+            ...state.errors,
+            ...response.data.errors
+          },
           loading: false
-        }))
-      );
+        }));
+      });
     }
   };
 
-  validate = ({ email, password }) => {
+  validate = data => {
+    const { password, email } = data;
     const errors = {};
 
     if (isEmpty(password)) errors.password = "Password is required";
@@ -50,16 +55,16 @@ class LoginForm extends Component {
   };
 
   render() {
-    const { data, loading, errors } = this.state;
+    const { data, errors, loading } = this.state;
 
     return (
-      <Form error={errors.global} loading={loading} onSubmit={this.onSubmit}>
+      <Form onSubmit={this.onSubmit} loading={loading}>
         <Form.Field>
           <Form.Input
             name="email"
             type="email"
             label="Email"
-            placeholder="Email"
+            placeholder="email@email.com"
             onChange={this.onChange}
             value={data.email}
             error={errors.email}
@@ -72,7 +77,6 @@ class LoginForm extends Component {
             name="password"
             type="password"
             label="Password"
-            placeholder="Enter your password"
             onChange={this.onChange}
             value={data.password}
             error={errors.password}
@@ -80,23 +84,14 @@ class LoginForm extends Component {
           />
           <InlineError error={errors.password} />
         </Form.Field>
-        {errors.global && (
-          <Message error header="Form errors" content={errors.global} />
-        )}
-        <Button primary>
-          Login
-        </Button>
-        <Button basic onClick={() => this.props.history.push("/")}>
-          Back
-        </Button>
+        <Button primary>Sign Up</Button>
       </Form>
     );
   }
 }
 
-LoginForm.propTypes = {
-  history: PropTypes.object.isRequired,
+SignupForm.propTypes = {
   submit: PropTypes.func.isRequired
 };
 
-export default LoginForm;
+export default SignupForm;

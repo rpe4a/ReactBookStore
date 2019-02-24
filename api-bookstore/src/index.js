@@ -4,7 +4,11 @@ import cors from "cors";
 import path from "path";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
+
+
 import auth from "./routes/auth";
+import users from "./routes/users";
+
 
 //* Application settings
 dotenv.config();
@@ -25,6 +29,8 @@ app.use(
 
 //* Setup Routing
 app.use("/api/auth", auth);
+app.use("/api/users", users);
+
 
 app.get("/*", (_, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
