@@ -1,10 +1,10 @@
-import React, { Component } from "react";
 import PropTypes from "prop-types";
+import React, { Component } from "react";
 import { connect } from "react-redux";
-import SignupForm from "../forms/SignupForm";
 import { signup } from "../../actions/users";
+import SignupForm from "../forms/SignupForm";
 
-export class SignupPage extends Component {
+class SignupPage extends Component {
   constructor(props) {
     super(props);
 
@@ -15,6 +15,7 @@ export class SignupPage extends Component {
     this.props.signup(data).then(() => this.props.history.push("/dashboard"));
 
   render() {
+    
     return (
       <div>
         <SignupForm submit={this.submit} />
